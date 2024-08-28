@@ -1,34 +1,63 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
+
+import { Response } from 'express';
+
+import { EventInDto, EventInSchema, EventOutSchema } from '@/dto/event.dto';
+
 import { AdminEventsService } from './admin-events.service';
-import { CreateAdminEventDto } from './dto/create-admin-event.dto';
-import { UpdateAdminEventDto } from './dto/update-admin-event.dto';
 
 @Controller('admin/events')
 export class AdminEventsController {
   constructor(private readonly adminEventsService: AdminEventsService) {}
 
-  @Post()
-  create(@Body() createAdminEventDto: CreateAdminEventDto) {
-    return this.adminEventsService.create(createAdminEventDto);
-  }
-
   @Get()
-  findAll() {
-    return this.adminEventsService.findAll();
+  async findAll() {
+    const events = await this.adminEventsService.findAll();
+    return EventOutSchema.array().parse(events);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminEventsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const event = await this.adminEventsService.findOne(id);
+    return EventOutSchema.parse(event);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminEventDto: UpdateAdminEventDto) {
-    return this.adminEventsService.update(+id, updateAdminEventDto);
+  @Post()
+  async create(@Body() event: EventInDto) {
+    const parsed = EventInSchema.safeParse(event);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.errors);
+    }
+
+    const createdEvent = await this.adminEventsService.create(parsed.data);
+    return EventOutSchema.parse(createdEvent);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() event: EventInDto) {
+    const parsed = EventInSchema.safeParse(event);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.errors);
+    }
+
+    const updatedEvent = await this.adminEventsService.update(id, parsed.data);
+    return EventOutSchema.parse(updatedEvent);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminEventsService.remove(+id);
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    await this.adminEventsService.remove(id);
+    return res.status(HttpStatus.NO_CONTENT).send();
   }
 }
