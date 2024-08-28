@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -10,54 +9,57 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { Response } from 'express';
+import { ZodSerializerDto } from 'nestjs-zod';
 
-import { EventInDto, EventInSchema, EventOutSchema } from '@/dto/event.dto';
+import { EventInDto, EventOutDto } from '@/dto/event.dto';
 
 import { AdminEventsService } from './admin-events.service';
 
+@ApiTags('admin-events')
 @Controller('admin/events')
 export class AdminEventsController {
-  constructor(private readonly adminEventsService: AdminEventsService) {}
+  constructor(private readonly adminEventService: AdminEventsService) {}
 
+  @ApiOkResponse({ type: EventOutDto, isArray: true })
+  @ZodSerializerDto(EventOutDto)
   @Get()
   async findAll() {
-    const events = await this.adminEventsService.findAll();
-    return EventOutSchema.array().parse(events);
+    return await this.adminEventService.findAll();
   }
 
+  @ApiOkResponse({ type: EventOutDto })
+  @ZodSerializerDto(EventOutDto)
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const event = await this.adminEventsService.findOne(id);
-    return EventOutSchema.parse(event);
+    return await this.adminEventService.findOne(id);
   }
 
+  @ApiCreatedResponse({ type: EventOutDto })
+  @ZodSerializerDto(EventOutDto)
   @Post()
   async create(@Body() event: EventInDto) {
-    const parsed = EventInSchema.safeParse(event);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.errors);
-    }
-
-    const createdEvent = await this.adminEventsService.create(parsed.data);
-    return EventOutSchema.parse(createdEvent);
+    return await this.adminEventService.create(event);
   }
 
+  @ApiOkResponse({ type: EventOutDto })
+  @ZodSerializerDto(EventOutDto)
   @Put(':id')
   async update(@Param('id') id: string, @Body() event: EventInDto) {
-    const parsed = EventInSchema.safeParse(event);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.errors);
-    }
-
-    const updatedEvent = await this.adminEventsService.update(id, parsed.data);
-    return EventOutSchema.parse(updatedEvent);
+    return await this.adminEventService.update(id, event);
   }
 
+  @ApiNoContentResponse()
   @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
-    await this.adminEventsService.remove(id);
+    await this.adminEventService.remove(id);
     return res.status(HttpStatus.NO_CONTENT).send();
   }
 }

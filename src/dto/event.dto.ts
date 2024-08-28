@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const EventInSchema = z
@@ -17,7 +18,7 @@ export const EventInSchema = z
     path: ['endDateTime'],
     message: 'End date must be after start date',
   });
-export type EventInDto = z.infer<typeof EventInSchema>;
+export class EventInDto extends createZodDto(EventInSchema) {}
 
 export const EventOutSchema = z.object({
   id: z.string().min(1),
@@ -30,4 +31,4 @@ export const EventOutSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
-export type EventOutDto = z.infer<typeof EventOutSchema>;
+export class EventOutDto extends createZodDto(EventOutSchema) {}
