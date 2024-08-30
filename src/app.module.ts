@@ -1,14 +1,26 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 
+import { ENVSchema } from '@/models/env';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
+import { AdminAuthModule } from './apps/admin-auth/admin-auth.module';
 import { AdminEventsModule } from './apps/admin-events/admin-events.module';
 
 @Module({
-  imports: [AdminEventsModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate: (config) => ENVSchema.parse(config),
+    }),
+    AdminAuthModule,
+    AdminEventsModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
