@@ -12,6 +12,7 @@ import { AppService } from './app.service';
 import { AdminAuthModule } from './apps/admin-auth/admin-auth.module';
 import { AdminEventsModule } from './apps/admin-events/admin-events.module';
 import { AdminNewsModule } from './apps/admin-news/admin-news.module';
+import { PublicAuthModule } from './apps/public-auth/public-auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AdminNewsModule } from './apps/admin-news/admin-news.module';
       isGlobal: true,
       validate: (config) => ENVSchema.parse(config),
     }),
+    PublicAuthModule,
     AdminAuthModule,
     AdminEventsModule,
     AdminNewsModule,
