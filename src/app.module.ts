@@ -14,6 +14,7 @@ import { AdminEventsModule } from './apps/admin-events/admin-events.module';
 import { AdminNewsModule } from './apps/admin-news/admin-news.module';
 import { PublicAuthModule } from './apps/public-auth/public-auth.module';
 import { PublicEventsModule } from './apps/public-events/public-events.module';
+import { PublicNewsModule } from './apps/public-news/public-news.module';
 import { PublicReservationsModule } from './apps/public-reservations/public-reservations.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { PublicReservationsModule } from './apps/public-reservations/public-rese
     PublicAuthModule,
     PublicEventsModule,
     PublicReservationsModule,
+    PublicNewsModule,
     AdminAuthModule,
     AdminEventsModule,
     AdminNewsModule,
