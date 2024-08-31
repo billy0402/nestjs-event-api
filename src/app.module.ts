@@ -13,6 +13,7 @@ import { AdminAuthModule } from './apps/admin-auth/admin-auth.module';
 import { AdminEventsModule } from './apps/admin-events/admin-events.module';
 import { AdminNewsModule } from './apps/admin-news/admin-news.module';
 import { PublicAuthModule } from './apps/public-auth/public-auth.module';
+import { PublicEventsModule } from './apps/public-events/public-events.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PublicAuthModule } from './apps/public-auth/public-auth.module';
       validate: (config) => ENVSchema.parse(config),
     }),
     PublicAuthModule,
+    PublicEventsModule,
     AdminAuthModule,
     AdminEventsModule,
     AdminNewsModule,
