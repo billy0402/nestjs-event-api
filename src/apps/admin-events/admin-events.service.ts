@@ -46,4 +46,14 @@ export class AdminEventsService {
 
     return await this.prisma.event.delete({ where: { id } });
   }
+
+  async getReservations(id: string) {
+    // 檢查是否有此活動
+    await this.findOne(id);
+
+    return await this.prisma.event.findUnique({
+      include: { reservations: { include: { user: true } } },
+      where: { id },
+    });
+  }
 }

@@ -25,6 +25,7 @@ import { EventInDto, EventOutDto } from '@/dto/event.dto';
 import { AuthGuard } from '@/guards/auth/auth.guard';
 import { Roles, RolesGuard } from '@/guards/roles/roles.guard';
 
+import { EventReservationOutDto } from '@/dto/event-reservation.dto';
 import { AdminEventsService } from './admin-events.service';
 
 @ApiTags('admin-events')
@@ -67,5 +68,12 @@ export class AdminEventsController {
   async remove(@Param('id') id: string, @Res() res: Response) {
     await this.adminEventService.remove(id);
     return res.status(HttpStatus.NO_CONTENT).send();
+  }
+
+  @ApiOkResponse({ type: EventReservationOutDto, isArray: true })
+  @ZodSerializerDto(EventReservationOutDto)
+  @Get(':id/reservations')
+  async getReservations(@Param('id') id: string) {
+    return await this.adminEventService.getReservations(id);
   }
 }
