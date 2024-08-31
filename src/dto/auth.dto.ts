@@ -37,6 +37,22 @@ export const RegisterInSchema = z
   .transform(({ confirmPassword, ...data }) => data);
 export class RegisterInDto extends createZodDto(RegisterInSchema) {}
 
+export const RegisterAdminInSchema = z
+  .object({
+    email: z.string().email().min(1),
+    password: z.string().min(6),
+    confirmPassword: z.string().min(6),
+    name: z.string().min(1),
+    role: z.nativeEnum(Role).default(Role.USER),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: "Passwords don't match",
+  })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  .transform(({ confirmPassword, ...data }) => data);
+export class RegisterAdminInDto extends createZodDto(RegisterAdminInSchema) {}
+
 // Me
 export const UserInfoSchema = z.object({
   id: z.string().min(1),

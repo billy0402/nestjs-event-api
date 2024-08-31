@@ -16,7 +16,7 @@ import { ZodSerializerDto } from 'nestjs-zod';
 import {
   LoginInDto,
   RefreshInDto,
-  RegisterInDto,
+  RegisterAdminInDto,
   TokenPayloadDto,
   UserInfoDto,
 } from '@/dto/auth.dto';
@@ -53,7 +53,7 @@ export class AdminAuthController {
   @ApiCreatedResponse({ type: UserInfoDto })
   @ZodSerializerDto(UserInfoDto)
   @Post('register')
-  async register(@Body() data: RegisterInDto) {
+  async register(@Body() data: RegisterAdminInDto) {
     return await this.userService.create(data);
   }
 
