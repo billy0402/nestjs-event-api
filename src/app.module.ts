@@ -14,6 +14,7 @@ import { AdminEventsModule } from './apps/admin-events/admin-events.module';
 import { AdminNewsModule } from './apps/admin-news/admin-news.module';
 import { PublicAuthModule } from './apps/public-auth/public-auth.module';
 import { PublicEventsModule } from './apps/public-events/public-events.module';
+import { PublicReservationsModule } from './apps/public-reservations/public-reservations.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PublicEventsModule } from './apps/public-events/public-events.module';
     }),
     PublicAuthModule,
     PublicEventsModule,
+    PublicReservationsModule,
     AdminAuthModule,
     AdminEventsModule,
     AdminNewsModule,
